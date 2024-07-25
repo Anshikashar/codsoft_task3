@@ -1,0 +1,38 @@
+#importing libraries
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+
+#importing the dataset
+df = pd.read_csv('iris.csv')
+df.head()
+df.describe()
+sns.pairplot(df,hue='species')
+df.info()
+
+#checking for null values
+df.isnull()
+df.isnull().sum()
+sns.heatmap(df.isnull())
+
+#applying svc model
+from sklearn.model_selection import train_test_split
+X=df.drop('species',axis=1)
+Y=df['species']
+X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2)
+
+# Support vector machine algorithm
+from sklearn.svm import SVC
+svc = SVC()
+svc.fit(X_train, y_train)
+predictions = svc.predict(X_test)
+from sklearn.metrics import accuracy_score
+accuracy_score(y_test, predictions)
+
+#predicting
+from sklearn.metrics import classification_report
+print(classification_report(y_test, predictions))
+X_new = np.array([[3, 2, 1, 0.2], [  4.9, 2.2, 3.8, 1.1 ], [  5.3, 2.5, 4.6, 1.9 ]])
+prediction = svc.predict(X_new)
+print("Prediction of Species: {}".format(prediction))
